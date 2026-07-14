@@ -37,14 +37,6 @@ const KEY_TO_DIR: Record<string, Dir> = {
   Down: "down",
   Left: "left",
   Right: "right",
-  w: "up",
-  W: "up",
-  s: "down",
-  S: "down",
-  a: "left",
-  A: "left",
-  d: "right",
-  D: "right",
 };
 
 const CODE_TO_DIR: Record<string, Dir> = {
@@ -52,10 +44,6 @@ const CODE_TO_DIR: Record<string, Dir> = {
   ArrowDown: "down",
   ArrowLeft: "left",
   ArrowRight: "right",
-  KeyW: "up",
-  KeyS: "down",
-  KeyA: "left",
-  KeyD: "right",
 };
 
 const KEYCODE_TO_DIR: Record<number, Dir> = {
@@ -63,14 +51,11 @@ const KEYCODE_TO_DIR: Record<number, Dir> = {
   40: "down",
   37: "left",
   39: "right",
+  // Android / Fire TV DPAD
   19: "up",
   20: "down",
   21: "left",
   22: "right",
-  87: "up",
-  83: "down",
-  65: "left",
-  68: "right",
 };
 
 export const CENTER_KEYCODES = new Set([13, 23, 32]);
