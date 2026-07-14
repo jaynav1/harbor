@@ -4,6 +4,8 @@ import {
   CENTER_KEYCODES,
   MODAL_CLOSE_SELECTOR,
   activeSearchEditEl,
+  caretAllowsNavEscape,
+  clearSearchEditMode,
   clearTvFocusRing,
   closeTopFocusScope,
   enterSearchEditMode,
@@ -140,18 +142,28 @@ export function useKeyboardNavigation(options: TVNavigationOptions = {}) {
       }
 
       if (isLocallyManaged(target)) return;
-      if (activeIsSearch && isEditingSearch) return;
-      if (isEditable(target) && !isSearchLikeField(target)) return;
 
       const dir = getDirection(e);
 
       if (dir) {
         if (!arrowsRef.current) return;
+
+        // Any focused text field owns Left/Right for the caret until an edge
+        // (and Up/Down on single-line). Includes search overlay, which focuses
+        // the input without always setting data-search-editing.
+        if (active && isEditable(active)) {
+          if (!caretAllowsNavEscape(active, dir)) return;
+          if (isEditingSearch) clearSearchEditMode();
+        }
+
         e.preventDefault();
         e.stopPropagation();
         moveFocus(dir, wrapRef.current);
         return;
       }
+
+      if (activeIsSearch && isEditingSearch) return;
+      if (isEditable(target) && !isSearchLikeField(target)) return;
 
       const isCenter = CENTER_KEYCODES.has(e.keyCode) || e.key === "Enter" || e.code === "Enter";
       if (!isCenter) return;

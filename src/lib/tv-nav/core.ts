@@ -88,6 +88,40 @@ export function isEditable(el: HTMLElement | null) {
 }
 
 /**
+ * When typing in a field, arrows move the caret — but at the edges (or Up/Down
+ * on a single-line input) they should leave the field for spatial nav instead
+ * of trapping focus until Back.
+ */
+export function caretAllowsNavEscape(el: HTMLElement, dir: Dir): boolean {
+  if (el instanceof HTMLSelectElement) return true;
+  if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement)) {
+    return dir === "up" || dir === "down";
+  }
+
+  const start = el.selectionStart;
+  const end = el.selectionEnd;
+  if (start == null || end == null) return dir === "up" || dir === "down";
+  if (start !== end && (dir === "left" || dir === "right")) return false;
+
+  const value = el.value;
+  if (dir === "left") return start === 0;
+  if (dir === "right") return end === value.length;
+
+  const multiline = el instanceof HTMLTextAreaElement;
+  if (!multiline) return true; // single-line: Up/Down always leave
+
+  if (dir === "up") return !value.slice(0, start).includes("\n");
+  if (dir === "down") return !value.slice(end).includes("\n");
+  return false;
+}
+
+export function clearSearchEditMode() {
+  if (!activeSearchEditEl) return;
+  activeSearchEditEl.removeAttribute("data-search-editing");
+  activeSearchEditEl = null;
+}
+
+/**
  * Fields that use HTPC search-edit mode (Enter arms caret typing).
  * Prefer type/role/inputmode — not translated label text.
  */
@@ -357,7 +391,13 @@ function ensureFocusStyles() {
   const style = document.createElement("style");
   style.setAttribute("data-tv-focus-styles", "true");
   style.textContent = `
-    [data-tv-focused="true"] {
+    button[data-tv-focused="true"],
+    a[data-tv-focused="true"],
+    select[data-tv-focused="true"],
+    summary[data-tv-focused="true"],
+    [tabindex][data-tv-focused="true"],
+    [data-tv-focused="true"]:focus,
+    [data-tv-focused="true"]:focus-visible {
       outline: none !important;
       box-shadow: 0 0 0 4px var(--tv-focus-ring, #ffffff), 0 0 0 8px rgba(0,0,0,0.35) !important;
       transition: box-shadow 120ms ease;

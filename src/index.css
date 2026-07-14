@@ -1536,11 +1536,11 @@ html[data-theme-layout="minui"] .anime-award-banner-logo {
   to { opacity: 0; transform: scale(0.99); }
 }
 
-button:focus-visible,
-a:focus-visible,
-select:focus-visible,
-summary:focus-visible,
-[tabindex]:focus-visible {
+button:focus-visible:not([data-tv-focused]),
+a:focus-visible:not([data-tv-focused]),
+select:focus-visible:not([data-tv-focused]),
+summary:focus-visible:not([data-tv-focused]),
+[tabindex]:focus-visible:not([data-tv-focused]) {
   outline: 2px solid var(--color-accent) !important;
   outline-offset: 2px;
 }
