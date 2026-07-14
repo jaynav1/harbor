@@ -82,6 +82,7 @@ export function TopMatch({
           )}
           <button
             type="button"
+            data-tv-initial-focus
             onClick={handleOpen}
             className="mt-6 inline-flex h-12 max-w-max items-center gap-2 self-start rounded-full bg-ink px-6 text-[14.5px] font-semibold text-canvas shadow-[0_8px_24px_-8px_rgba(255,255,255,0.25)] transition-all hover:shadow-[0_10px_28px_-6px_rgba(255,255,255,0.4)] active:scale-[0.98]"
           >

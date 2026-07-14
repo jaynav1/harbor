@@ -799,6 +799,7 @@ export function Home({ active = true }: { active?: boolean }) {
           {settings.homeMode !== "classic" && !homeRowsCustom.hidden.includes("hero") && (
             <div
               data-scroll-anchor="hero"
+              data-tv-hero-zone
               className={`relative ${settings.heroFull ? "-mt-24 lg:-mt-28 -mb-12 harbor-hero-full" : ""}`}
             >
               {editMode && (

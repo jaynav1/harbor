@@ -601,10 +601,11 @@ export function AnimeView({ active = true }: { active?: boolean }) {
       <ScrollRootContext.Provider value={scrollEl}>
         <div data-tauri-drag-region className="flex flex-col gap-12">
           {heroMetas.length > 0 ? (
-            <div data-scroll-anchor="hero" className="relative harbor-anime-hero">
+            <div data-scroll-anchor="hero" data-tv-hero-zone className="relative harbor-anime-hero">
               <AnimeHero slides={heroMetas} topPicks={topPicks} trendingByMetaId={heroTrending} />
               <button
                 type="button"
+                data-tv-hero-rail
                 onClick={() => setShowPicker(true)}
                 title={t("Tune anime")}
                 aria-label={t("Tune anime")}

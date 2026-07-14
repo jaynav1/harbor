@@ -127,6 +127,7 @@ export function AnimeHero({
           <div className="mt-1 flex items-center gap-3">
             <button
               type="button"
+              data-tv-initial-focus
               onClick={() => openMeta(current)}
               className="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-3 text-[13px] font-bold uppercase tracking-[0.08em] text-canvas transition-colors duration-150 hover:bg-accent/90"
             >
@@ -161,6 +162,7 @@ export function AnimeHero({
         <>
           <button
             type="button"
+            data-tv-hero-rail
             onClick={prev}
             aria-label={t("Previous")}
             className="absolute start-3 top-[260px] z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-canvas/35 text-ink-muted transition-colors duration-150 hover:bg-canvas/65 hover:text-ink"
@@ -169,6 +171,7 @@ export function AnimeHero({
           </button>
           <button
             type="button"
+            data-tv-hero-rail
             onClick={next}
             aria-label={t("Next")}
             className="absolute end-3 top-[260px] z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-canvas/35 text-ink-muted transition-colors duration-150 hover:bg-canvas/65 hover:text-ink"
@@ -182,7 +185,7 @@ export function AnimeHero({
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-[20px] font-medium tracking-tight text-ink">{t("Top Picks for You")}</h2>
           {slides.length > 1 && (
-            <div className="flex gap-1.5">
+            <div data-tv-hero-rail className="flex gap-1.5">
               {slides.map((_, i) => (
                 <button
                   key={i}

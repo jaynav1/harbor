@@ -451,7 +451,13 @@ export function focusElement(el: HTMLElement, scroll: TvNavScroll = "center") {
   el.focus({ preventScroll: true });
 
   if (isInHero(el)) {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    // Anime/home scroll inside <main overflow-y-auto>, not the window.
+    const scroller =
+      el.closest<HTMLElement>("[data-tv-hero-zone]")?.closest<HTMLElement>(
+        '[class*="overflow-y-auto"], [class*="overflow-auto"]',
+      ) ?? null;
+    if (scroller) scroller.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    else window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     return;
   }
   // Fixed chrome must not scroll the page; opt in with data-tv-scroll-focus (e.g. settings nav).
