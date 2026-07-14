@@ -137,6 +137,7 @@ export function isSearchLikeField(el: HTMLElement | null) {
 
 export function isVisible(el: HTMLElement) {
   if (!el.isConnected) return false;
+  if (el.closest("[data-tv-nav-exclude]")) return false;
   if (el.closest('[hidden], [inert], [aria-hidden="true"]')) return false;
 
   const style = window.getComputedStyle(el);
@@ -362,6 +363,38 @@ export function focusTvPageDefault(): void {
   const content = getFocusableInZone("content");
   const first = getInitialFocus(content);
   if (first) focusElement(first);
+}
+
+/**
+ * Move TV focus to the first focusable inside `root` (e.g. a settings card
+ * after search teleport). Clears search-edit mode so keys aren't stuck in the
+ * search field. Falls back to focusing `root` itself when it has no controls.
+ */
+export function focusTvFirstIn(
+  root: ParentNode,
+  scroll: TvNavScroll = "none",
+): boolean {
+  clearSearchEditMode();
+  const active =
+    typeof document !== "undefined" && document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+  // Leave the settings search box (or whatever had focus) before moving.
+  if (active && (!(root instanceof Node) || !root.contains(active))) {
+    active.blur();
+  }
+
+  const first = getInitialFocus(getFocusable(root));
+  if (first) {
+    focusElement(first, scroll);
+    return true;
+  }
+  if (root instanceof HTMLElement) {
+    if (!root.hasAttribute("tabindex")) root.tabIndex = -1;
+    focusElement(root, scroll);
+    return true;
+  }
+  return false;
 }
 
 export const MODAL_CLOSE_SELECTOR = "[data-tv-modal-close]";

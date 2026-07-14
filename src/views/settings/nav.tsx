@@ -1245,7 +1245,7 @@ export function SettingsNav({
             <path d="m20 20-3.5-3.5" />
           </svg>
           <input
-            type="text"
+            type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("Search settings")}

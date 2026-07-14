@@ -25,6 +25,7 @@ import { StreamFiltersPanel } from "./settings/stream-filters-panel";
 import { ThemePanel } from "./settings/theme-panel";
 import { WebhooksPanel } from "./settings/webhooks-panel";
 import { BackToTop } from "@/components/back-to-top";
+import { focusTvFirstIn } from "@/lib/keyboard-navigation";
 import { resetOmdbBudget } from "@/lib/providers/omdb";
 import { useSettings } from "@/lib/settings";
 import { useView } from "@/lib/view";
@@ -196,6 +197,14 @@ export function Settings() {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
         el.style.transition = "box-shadow 0.5s ease";
         el.style.boxShadow = "0 0 0 2px var(--color-accent)";
+        // Panel children may still be mounting — retry until a control inside
+        // the card takes focus (focusTvFirstIn returns false while empty).
+        let focusTries = 0;
+        const tryFocus = () => {
+          if (focusTvFirstIn(el, "none")) return;
+          if (focusTries++ < 12) window.setTimeout(tryFocus, 50);
+        };
+        window.setTimeout(tryFocus, 80);
         window.setTimeout(() => {
           el.style.boxShadow = "0 0 0 0 transparent";
         }, 1300);
@@ -240,6 +249,7 @@ export function Settings() {
       <SettingsNav active={active} onChange={handleNav} />
       <main
         ref={scrollRef}
+        data-tv-list-nav
         className="flex-1 overflow-y-auto pt-28 pb-16"
       >
         <div data-tauri-drag-region className="mx-auto flex max-w-3xl flex-col gap-10 px-12">

@@ -4,6 +4,7 @@ export {
   isVisible,
   getFocusable,
   focusTvPageDefault,
+  focusTvFirstIn,
 } from './tv-nav/core';
 export {
   moveFocus,

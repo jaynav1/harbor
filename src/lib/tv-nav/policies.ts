@@ -2,6 +2,7 @@ import { SFX } from "@/lib/sfx";
 import {
   findBest,
   findClosestByY,
+  findVerticalNeighbor,
   focusElement,
   getFocusable,
   getFocusableInZone,
@@ -19,6 +20,26 @@ const chromeDownToContent: TvNavPolicy = ({ active, dir, root }) => {
   if (!first) return false;
   SFX.navigate(dir, getSoundType(first));
   focusElement(first, "center");
+  return true;
+};
+
+/**
+ * Settings column: Up/Down move by row (skip horizontal neighbors like slider
+ * thumbs / paired buttons). JumpBar is excluded via data-tv-nav-exclude so
+ * below-the-fold Export/Restore aren't stolen by the fixed chip rail.
+ */
+const settingsListNav: TvNavPolicy = ({ active, dir }) => {
+  if (!active || (dir !== 'up' && dir !== 'down')) return false;
+  const listRoot = active.closest<HTMLElement>('[data-tv-list-nav]');
+  if (!listRoot) return false;
+  const items = getFocusable(listRoot);
+  const next = findVerticalNeighbor(active, items, dir);
+  if (next) {
+    SFX.navigate(dir, getSoundType(next));
+    focusElement(next, 'center');
+    return true;
+  }
+  // Edge of the settings column — stay put (don't leap to JumpBar/sidebar).
   return true;
 };
 
@@ -51,7 +72,10 @@ const contentUpToChrome: TvNavPolicy = ({ active, dir, root, zone }) => {
 };
 
 /** Surface policies that run after sidebar engine, before the zone pool check. */
-export const earlyTvNavPolicies: TvNavPolicy[] = [chromeDownToContent];
+export const earlyTvNavPolicies: TvNavPolicy[] = [
+  settingsListNav,
+  chromeDownToContent,
+];
 
 /** Surface policies that run once focus is known to be in the zone pool. */
 export const inZoneTvNavPolicies: TvNavPolicy[] = [heroVertical];

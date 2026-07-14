@@ -152,7 +152,10 @@ export function SettingsJumpBar({
   };
 
   return (
-    <div className="pointer-events-none fixed bottom-5 left-[calc(50%+144px)] z-30 flex -translate-x-1/2 justify-center px-4 rtl:left-[calc(50%-144px)]">
+    <div
+      data-tv-nav-exclude
+      className="pointer-events-none fixed bottom-5 left-[calc(50%+144px)] z-30 flex -translate-x-1/2 justify-center px-4 rtl:left-[calc(50%-144px)]"
+    >
       <div
         ref={railRef}
         onPointerDown={onPointerDown}
